@@ -1,5 +1,5 @@
 # Asymmetric Amplification
-Replication Code and Data for 'Asymmetric Amplification and the Consumer Sentiment Gap'
+Replication Code and Data for 'Asymmetric Amplification and the Consumer Sentiment Gap.'
 
 This repository contains:
 
