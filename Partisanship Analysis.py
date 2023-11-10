@@ -48,8 +48,7 @@ df['SP500_quarterly_return'] = df['Adj Close'].pct_change(periods=3)
 ################################# FRED VARS ###################################
 
 #FRED API setup
-"""DO NOT FORGET TO DELETE IF POSTING PUBLICLY"""
-api_key = '213811f6dd78c7f3d821187a9aad337d'  
+api_key = '' # add your FRED API key  
 fred = Fred(api_key=api_key)
 
 # Pull data from FRED
