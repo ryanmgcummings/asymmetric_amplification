@@ -17,12 +17,12 @@ import matplotlib.dates as mdates
 import numpy as np
 
 #Load in aggregated consumer sentiment and politcal sentiment.
-df = pd.read_excel(r'C:\Users\Ryan Cummings\OneDrive\Documents\Consumer Sentiment\sentiment_october.xlsx', sheet_name="all")
+df = pd.read_excel(r'~\sentiment_september.xlsx', sheet_name="all")
 df=df[['date', 'ics_all']]
 df.set_index('date', inplace=True)
 
 #Note the six observations before 2006 are just dropped in the data cleaning. 
-pol_df = pd.read_excel(r'C:\Users\Ryan Cummings\OneDrive\Documents\Consumer Sentiment\demopoliticalparty202310.xlsx', sheet_name="Partisanship")
+pol_df = pd.read_excel(r'~\demopoliticalparty202310.xlsx', sheet_name="Partisanship")
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Get SP 500, UR, inflation, and PCE into dataframe
