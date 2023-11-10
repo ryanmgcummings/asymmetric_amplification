@@ -6,6 +6,7 @@ This code produces the analysis in "Asymmetric Amplification and the Consumer Se
 by Ryan Cummings and Neale Mahoney. Note to run the code, you will have to change file locations where necessary
 and will need your own API key for FRED. 
 """
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -16,13 +17,13 @@ import statsmodels.api as sm
 import matplotlib.dates as mdates
 import numpy as np
 
-#Load in aggregated consumer sentiment and politcal sentiment.
-df = pd.read_excel(r'~\sentiment_september.xlsx', sheet_name="all")
+# Load in aggregated consumer sentiment and politcal sentiment.
+df = pd.read_excel('~/sentiment_september.xlsx', sheet_name="all")
 df=df[['date', 'ics_all']]
 df.set_index('date', inplace=True)
 
-#Note the six observations before 2006 are just dropped in the data cleaning. 
-pol_df = pd.read_excel(r'~\demopoliticalparty202310.xlsx', sheet_name="Partisanship")
+# Note: obs. before 2006 are not included
+pol_df = pd.read_excel('~/demopoliticalparty202310.xlsx', sheet_name="Partisanship")
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Get SP 500, UR, inflation, and PCE into dataframe
@@ -48,7 +49,7 @@ df['SP500_quarterly_return'] = df['Adj Close'].pct_change(periods=3)
 ################################# FRED VARS ###################################
 
 #FRED API setup
-api_key = '' # add your FRED API key  
+api_key = '' # add key  
 fred = Fred(api_key=api_key)
 
 # Pull data from FRED
@@ -155,7 +156,6 @@ plt.show()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
         Regression 1-U3, CPI, PCE
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-merged_df = merged_df[merged_df.index < '2020-03-01']
 
 #Merge in the political sentiment dataframe
 merged_df.drop('date', axis=1, inplace=True)
@@ -329,27 +329,26 @@ merged_df['scaled_d_sent'] = ((merged_df['ICS_Dem'] - average_ics_dem) / (std_de
 
 
 ###################### Chart showing adjusted vs. regular #####################
+
+"""These are the weights by party from the survey, rescaled so DK/NA (=3.2% of full sample) are dropped. Full survey weights available here:
+    https://sda.umsurvey.org/sda-public/cgi-bin/hsda3?sdaprog=describe&var=POLAFF&sdapath=%2Fsda-public%2Fbin&study=%2Fsda-public%2Fhtdocs%2Fsca&varcase=upper&subtmpdir=%2Fsda-public%2Fhtdocs%2Ftmpdir"""
 r_weight=0.286452947
 d_weight=0.317476732
 i_weight=0.396070321
 
-# Calculate the adjusted sentiment
+# Calculate adjusted total sentiment
 merged_df['adjusted_sentiment'] = (
     merged_df['scaled_r_sent'] * r_weight +
     merged_df['scaled_i_sent'] * i_weight ++
     merged_df['scaled_d_sent'] * d_weight
 )
 
-
-
 # Plotting observed vs. adjusted sentiment
 plt.figure(figsize=(14, 7))
 plt.rcParams['font.family'] = 'Times New Roman'
 plt.rcParams['font.size'] = 14
-
 plt.plot(merged_df['date'], merged_df['ics_all'], color='gray', label='Reported Sentiment')
 plt.plot(merged_df['date'], merged_df['adjusted_sentiment'], 'k--', label='Adjusted Sentiment')
-
 plt.legend(fontsize=14)
 plt.title('Observed vs Adjusted Sentiment', fontsize=16, fontweight='bold')
 plt.xlabel('Date', fontsize=14)
@@ -360,4 +359,3 @@ source_note = plt.figtext(0.1, -0.05, source_note_text, wrap=True, horizontalali
 plt.tight_layout()
 sns.despine()
 plt.show()
-
